@@ -34,19 +34,17 @@ const handleResponse = async (res) => {
 export const getPizzas = async () => {
   const res  = await fetch(`${BASE}/traer`, { credentials: "include" });
   const data = await handleResponse(res);
-  // Mapeamos los campos del backend al formato que usa el front
   return data.map((p) => ({
     id:          p.id,
     nombre:      p.name,
-    tipoCoccion: p.cookingType,              // "PIEDRA" | "PARRILLA" | "MOLDE"
-    tamanio:     SIZE_REVERSE[p.size] ?? p.size, // 8 | 10 | 12
+    tipoCoccion: p.cookingType,
+    tamanio:     SIZE_REVERSE[p.size] ?? p.size,
     descripcion: p.description,
     precio:      p.price,
   }));
 };
 
 // POST /pizza/guardar — crea una combinación
-// payload interno: { nombre, tipoCoccion, tamanio, descripcion, precio }
 export const crearPizza = async (data) => {
   const body = {
     name:        data.nombre,
@@ -87,7 +85,6 @@ export const crearVariedad = async ({ nombre, descripcion, precios }) => {
 };
 
 // PUT /pizza/editar/:id
-// payload interno: { nombre, tipoCoccion, tamanio, descripcion, precio }
 export const modificarPizza = async (id, data) => {
   const body = {
     name:        data.nombre,
@@ -114,12 +111,17 @@ export const eliminarPizza = async (id) => {
   return handleResponse(res);
 };
 
-// Elimina todas las combinaciones de una variedad (por nombre)
+// Elimina todas las combinaciones de una variedad (por nombre).
+// Secuencial para que el primer error del backend corte inmediatamente
+// sin eliminar combinaciones parciales.
 export const eliminarVariedad = async (nombre, todasLasPizzas) => {
   const ids = todasLasPizzas
     .filter((p) => p.nombre === nombre)
     .map((p) => p.id);
-  await Promise.all(ids.map(eliminarPizza));
+
+  for (const id of ids) {
+    await eliminarPizza(id);
+  }
 };
 
 // Helper: agrupa lista plana por nombre
@@ -147,7 +149,6 @@ export const agruparPorVariedad = (pizzas) => {
 };
 
 // Dado el array plano de pizzas, devuelve el id de la combinación específica
-// Útil al armar líneas de pedido
 export const getPizzaId = (pizzas, nombre, tipoCoccion, tamanio) => {
   const pz = pizzas.find(
     (p) =>

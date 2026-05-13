@@ -30,7 +30,18 @@ const mapPedido = (p) => ({
   id:             p.id,
   nroPedido:      p.id,
   cliente:        p.clientName ?? "",
-  fecha:          p.orderDate,
+  fecha:          p.orderDate
+    ? new Date(p.orderDate).toLocaleDateString("es-AR", {
+        day:   "2-digit",
+        month: "2-digit",
+        year:  "numeric",
+      }) +
+      " " +
+      new Date(p.orderDate).toLocaleTimeString("es-AR", {
+        hour:   "2-digit",
+        minute: "2-digit",
+      })
+    : "",
   horaEntrega:    p.deliveredAt?.slice(0, 5) ?? "",
   demoraEstimada: `${p.timeEstimated} min`,
   estado:         STATUS_REVERSE[p.status] ?? p.status,
@@ -117,7 +128,6 @@ export const marcarComoListo = async (id) => {
     credentials: "include",
   });
   if (!res.ok) throw new Error("Error al marcar como listo");
-  // El backend devuelve 200 sin body según OrderController
   return true;
 };
 

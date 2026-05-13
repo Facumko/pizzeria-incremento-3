@@ -1,6 +1,6 @@
 // reporteService.js — INC-03
 
-import { getPedidos } from "./pedidoService";
+import { getFacturas } from "./facturaService";
 
 // Convierte un Date a formato LocalDateTime que Spring acepta: "2026-05-13T00:00:00"
 const toLocalDateTime = (date) => {
@@ -32,38 +32,23 @@ export const getPizzasMasPedidas = async (start, end) => {
 };
 
 // ── Ingresos y volumen por período ──────────────────────────────────────────
-// Calculado sobre pedidos en estado "Facturado" (no requiere /factura/traer).
+// Usa el endpoint /factura/traer y filtra por fechaEmision (issuedAt) en el cliente.
 // Devuelve { totalIngresos, cantidadPedidos, facturas: [...] }
 export const getResumenPeriodo = async (start, end) => {
-  const pedidos = await getPedidos("Facturado");
+  const todasLasFacturas = await getFacturas();
 
-  const filtrados = pedidos.filter((p) => {
-    const fecha = new Date(p.fecha);
+  // Filtrar por fecha de EMISIÓN de la factura (no por fecha del pedido)
+  const filtradas = todasLasFacturas.filter((f) => {
+    if (!f.fechaEmision) return false;
+    const fecha = new Date(f.fechaEmision);
     return fecha >= start && fecha <= end;
   });
 
-  const calcularTotal = (lineas = []) =>
-    lineas.reduce((acc, l) => acc + l.precioUnitario * l.cantidad, 0);
-
-  const totalIngresos = filtrados.reduce((acc, p) => acc + calcularTotal(p.lineas), 0);
-
-  // Adaptamos los objetos para que los componentes los usen con la misma forma
-  // que antes (campos usados: id, nroFactura, fechaEmision, pedido.cliente, pedido.nroPedido, total)
-  const facturasAdaptadas = filtrados.map((p) => ({
-    id:           p.id,
-    nroFactura:   p.nroPedido,
-    fechaEmision: p.fecha,
-    total:        calcularTotal(p.lineas),
-    pedido: {
-      id:        p.id,
-      nroPedido: p.nroPedido,
-      cliente:   p.cliente,
-    },
-  }));
+  const totalIngresos = filtradas.reduce((acc, f) => acc + f.total, 0);
 
   return {
     totalIngresos,
-    cantidadPedidos: filtrados.length,
-    facturas: facturasAdaptadas,
+    cantidadPedidos: filtradas.length,
+    facturas: filtradas,   // ya tienen la forma correcta: { id, nroFactura, fechaEmision, total, pedido: {...} }
   };
 };
