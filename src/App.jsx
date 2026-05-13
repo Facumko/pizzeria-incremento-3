@@ -1,5 +1,6 @@
 // INC-01: Login, Menú, Pedidos, Cocina
 // INC-02: Facturación
+// INC-03: Reportes Gerenciales
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useAuth, AuthProvider } from "./context/AuthContext";
@@ -17,6 +18,7 @@ import FacturacionPage  from "./pages/facturacion/Facturacionpage";
 import ConfirmarFactura from "./pages/facturacion/Confirmarfactura ";
 import HistorialFacturas from "./pages/facturacion/HistorialFacturas";
 import VistaFactura     from "./pages/facturacion/Vistafactura";
+import ReportesPage     from "./pages/reportes/ReportesPage";
 
 import "./styles/global.css";
 
@@ -151,6 +153,16 @@ const AppRoutes = () => {
         element={
           <ProtectedRoute roles={["Mostrador"]}>
             <AppLayout><VistaFactura /></AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* ── Reportes ── */}
+      <Route
+        path="/reportes"
+        element={
+          <ProtectedRoute roles={["Dueño"]}>
+            <AppLayout><ReportesPage /></AppLayout>
           </ProtectedRoute>
         }
       />

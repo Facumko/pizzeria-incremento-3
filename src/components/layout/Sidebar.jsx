@@ -16,7 +16,8 @@ const LINKS_COCINA = [
 ];
 
 const LINKS_DUEÑO = [
-  { to: "/menu", label: "Menú" },
+  { to: "/menu",     label: "Menú"     },
+  { to: "/reportes", label: "Reportes" },
 ];
 
 const getLinksByRol = (rol) => {

@@ -1,0 +1,425 @@
+/* Reportes.css — INC-03 */
+@import "../../styles/variables.css";
+
+/* ── Tabs de navegación ── */
+.reportes-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: var(--space-xl);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 5px;
+  width: fit-content;
+}
+
+.reportes-tab {
+  padding: 9px 20px;
+  border-radius: var(--radius-md);
+  border: none;
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-main);
+  white-space: nowrap;
+}
+
+.reportes-tab:hover:not(.reportes-tab--active) {
+  background: rgba(192, 57, 43, 0.06);
+  color: var(--color-primary);
+}
+
+.reportes-tab--active {
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(192, 57, 43, 0.30);
+}
+
+/* ── Filtros de fecha ── */
+.reportes-filtros {
+  display: flex;
+  gap: var(--space-md);
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: var(--space-xl);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.reportes-filtros__group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.reportes-filtros__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+}
+
+.reportes-filtros__input {
+  padding: 9px 12px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+  background: var(--color-surface);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  font-family: var(--font-main);
+  cursor: pointer;
+}
+
+.reportes-filtros__input:focus {
+  outline: none;
+  border-color: var(--color-green);
+  box-shadow: 0 0 0 3px rgba(26, 92, 56, 0.10);
+}
+
+.reportes-filtros__preset-group {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  align-items: center;
+  padding-bottom: 1px;
+}
+
+.reportes-filtros__preset {
+  padding: 6px 13px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-main);
+}
+
+.reportes-filtros__preset:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+
+.reportes-filtros__preset--active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* ── Tarjetas KPI ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.kpi-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+  border-left: 4px solid transparent;
+  transition: all var(--transition);
+}
+
+.kpi-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.kpi-card--ingresos { border-left-color: var(--color-primary); }
+.kpi-card--pedidos  { border-left-color: var(--color-green-light); }
+.kpi-card--promedio { border-left-color: var(--color-pendiente); }
+
+.kpi-card__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.kpi-card__valor {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--color-text);
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.kpi-card__valor--primary { color: var(--color-primary); }
+.kpi-card__valor--green   { color: var(--color-green-light); }
+.kpi-card__valor--amber   { color: var(--color-pendiente); }
+
+.kpi-card__sub {
+  font-size: 12px;
+  color: var(--color-text-muted);
+  margin-top: 6px;
+}
+
+/* ── Tabla de pizzas más pedidas ── */
+.reporte-tabla-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.reporte-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+}
+
+.reporte-tabla thead th {
+  padding: 12px var(--space-lg);
+  text-align: left;
+  background: var(--color-surface-alt);
+  border-bottom: 2px solid var(--color-border);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+
+.reporte-tabla thead th:last-child { text-align: right; }
+
+.reporte-tabla tbody tr {
+  transition: background var(--transition);
+}
+
+.reporte-tabla tbody tr:hover {
+  background: var(--color-surface-alt);
+}
+
+.reporte-tabla tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.reporte-tabla tbody td {
+  padding: 12px var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.reporte-tabla tbody td:last-child {
+  text-align: right;
+  font-weight: 800;
+  color: var(--color-primary);
+  font-size: var(--font-size-base);
+}
+
+/* Ranking badge */
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+
+.rank-badge--1 { background: #fef3c7; color: #92400e; border: 1.5px solid #fbbf24; }
+.rank-badge--2 { background: #f0f9ff; color: #075985; border: 1.5px solid #7dd3fc; }
+.rank-badge--3 { background: #fdf4ff; color: #7e22ce; border: 1.5px solid #e879f9; }
+.rank-badge--n { background: var(--color-surface-alt); color: var(--color-text-muted); border: 1.5px solid var(--color-border); }
+
+.rank-nombre {
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.rank-tipo {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-transform: capitalize;
+  margin-top: 1px;
+}
+
+/* ── Gráfico de barras CSS ── */
+.barchart {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.barchart__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.barchart__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  min-height: 32px;
+}
+
+.barchart__label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  min-width: 90px;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.barchart__track {
+  flex: 1;
+  height: 24px;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+}
+
+.barchart__fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--color-primary-dark), var(--color-primary-light));
+  border-radius: var(--radius-sm);
+  transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  min-width: 4px;
+}
+
+.barchart__value {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--color-primary);
+  min-width: 60px;
+}
+
+/* ── Estado vacío / loading ── */
+.reporte-empty {
+  text-align: center;
+  padding: var(--space-2xl) 0;
+  color: var(--color-text-muted);
+}
+
+.reporte-empty__icon {
+  font-size: 48px;
+  margin-bottom: var(--space-md);
+}
+
+/* ── Filtro tipo cocción ── */
+.tipo-filter {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-lg);
+}
+
+.tipo-filter__btn {
+  padding: 5px 14px;
+  border: 1.5px solid var(--color-border);
+  border-radius: 20px;
+  background: var(--color-surface);
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  font-family: var(--font-main);
+  text-transform: capitalize;
+}
+
+.tipo-filter__btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+
+.tipo-filter__btn--active {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+/* ── Tabla de ingresos ── */
+.ingresos-tabla-wrapper {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  margin-top: var(--space-xl);
+}
+
+.ingresos-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+}
+
+.ingresos-tabla thead th {
+  padding: 12px var(--space-lg);
+  text-align: left;
+  background: var(--color-surface-alt);
+  border-bottom: 2px solid var(--color-border);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+}
+
+.ingresos-tabla thead th:last-child { text-align: right; }
+
+.ingresos-tabla tbody tr:not(:last-child) td {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ingresos-tabla tbody tr:hover { background: var(--color-surface-alt); }
+
+.ingresos-tabla tbody td {
+  padding: 11px var(--space-lg);
+  font-size: var(--font-size-sm);
+  color: var(--color-text);
+}
+
+.ingresos-tabla tbody td:last-child {
+  text-align: right;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.ingresos-tabla tfoot td {
+  padding: 12px var(--space-lg);
+  border-top: 2px solid var(--color-border);
+  background: var(--color-surface-alt);
+  font-weight: 800;
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+}
+
+.ingresos-tabla tfoot td:last-child {
+  text-align: right;
+  color: var(--color-primary);
+  font-size: var(--font-size-lg);
+}
