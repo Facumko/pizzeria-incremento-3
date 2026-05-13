@@ -2,7 +2,7 @@
 // Muestra el total recaudado en un rango de fechas, calculado sobre facturas emitidas.
 
 import { useState, useCallback } from "react";
-import { getResumenPeriodo } from "../../services/reporteService";
+import { getResumenPeriodoConFacturas } from "../../services/reporteService";
 import { useFechas } from "./useFechas";
 import "./Reportes.css";
 
@@ -26,7 +26,7 @@ const IngresosPorPeriodo = () => {
     setLoading(true);
     setError("");
     try {
-      const data = await getResumenPeriodo(start, end);
+      const data = await getResumenPeriodoConFacturas(start, end);
       setResumen(data);
     } catch (e) {
       setError(e.message);

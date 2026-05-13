@@ -31,13 +31,12 @@ export const getPizzasMasPedidas = async (start, end) => {
   }));
 };
 
-// ── Ingresos y volumen por período ──────────────────────────────────────────
-// Usa el endpoint /factura/traer y filtra por fechaEmision (issuedAt) en el cliente.
-// Devuelve { totalIngresos, cantidadPedidos, facturas: [...] }
-export const getResumenPeriodo = async (start, end) => {
+// ── Ingresos por período ────────────────────────────────────────────────────
+// Usa GET /factura/traer y filtra en cliente para tener el detalle de facturas.
+// Usado por IngresosPorPeriodo (necesita la tabla de facturas).
+export const getResumenPeriodoConFacturas = async (start, end) => {
   const todasLasFacturas = await getFacturas();
 
-  // Filtrar por fecha de EMISIÓN de la factura (no por fecha del pedido)
   const filtradas = todasLasFacturas.filter((f) => {
     if (!f.fechaEmision) return false;
     const fecha = new Date(f.fechaEmision);
@@ -49,6 +48,37 @@ export const getResumenPeriodo = async (start, end) => {
   return {
     totalIngresos,
     cantidadPedidos: filtradas.length,
-    facturas: filtradas,   // ya tienen la forma correcta: { id, nroFactura, fechaEmision, total, pedido: {...} }
+    facturas: filtradas,
+  };
+};
+
+// ── Volumen de pedidos ──────────────────────────────────────────────────────
+// Usa los endpoints reales del backend:
+//   GET /reportes/ingresos?start=&end=
+//   GET /reportes/pedidos-por-periodo?start=&end=
+// Usado por VolumenPedidos (solo necesita KPIs, sin detalle de facturas).
+export const getResumenPeriodo = async (start, end) => {
+  const params = new URLSearchParams({
+    start: toLocalDateTime(start),
+    end:   toLocalDateTime(end),
+  });
+
+  const [incomeRes, ordersRes] = await Promise.all([
+    fetch(`/reportes/ingresos?${params}`, { credentials: "include" }),
+    fetch(`/reportes/pedidos-por-periodo?${params}`, { credentials: "include" }),
+  ]);
+
+  if (!incomeRes.ok) throw new Error(`Error al obtener ingresos (${incomeRes.status})`);
+  if (!ordersRes.ok) throw new Error(`Error al obtener pedidos (${ordersRes.status})`);
+
+  const income = await incomeRes.json(); // { desde, hasta, totalRecaudado, cantidadFacturas }
+  const orders = await ordersRes.json(); // { desde, hasta, cantidadPedidos, montoTotal }
+
+  return {
+    totalIngresos:   income.totalRecaudado,
+    cantidadPedidos: income.cantidadFacturas,
+    // VolumenPedidos no usa la tabla de facturas, pero el componente
+    // referencia resumen.facturas para el gráfico por día → array vacío.
+    facturas: [],
   };
 };
